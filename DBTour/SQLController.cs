@@ -41,6 +41,10 @@ namespace DBTour {
                 case CommandCode.TABLES:
                 tables();
                 break;
+
+                case CommandCode.INSERT:
+                insert();
+                break;
             }
         }
 
@@ -84,11 +88,14 @@ namespace DBTour {
         }
 
         private void tables() { 
-            this.command.CommandText = string.Format("SELECT name FROM sqlite_master WHERE type =  'table' ORDER BY 1");
+            this.command.CommandText = string.Format("SELECT name FROM sqlite_master WHERE type =  'table'");
             var returnObject = this.command.ExecuteScalar();
-            
             Console.WriteLine(returnObject.ToString());
-            
+        }
+        
+        private void insert() {
+            InsertCommandGenerator insertCommandGenerator = this.sQLCommandGeneratorFactory.newInsertSQLCommandGenerator();
+            this.command.CommandText = insertCommandGenerator.generateCommand();
         }
 
     }
