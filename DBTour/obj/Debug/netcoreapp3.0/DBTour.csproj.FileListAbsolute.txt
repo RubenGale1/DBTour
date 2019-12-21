@@ -1,0 +1,17 @@
+D:\DBTour\DBTour\bin\Debug\netcoreapp3.0\DBTour.exe
+D:\DBTour\DBTour\bin\Debug\netcoreapp3.0\DBTour.deps.json
+D:\DBTour\DBTour\bin\Debug\netcoreapp3.0\DBTour.runtimeconfig.json
+D:\DBTour\DBTour\bin\Debug\netcoreapp3.0\DBTour.runtimeconfig.dev.json
+D:\DBTour\DBTour\bin\Debug\netcoreapp3.0\DBTour.dll
+D:\DBTour\DBTour\bin\Debug\netcoreapp3.0\DBTour.pdb
+D:\DBTour\DBTour\obj\Debug\netcoreapp3.0\DBTour.csprojAssemblyReference.cache
+D:\DBTour\DBTour\obj\Debug\netcoreapp3.0\DBTour.AssemblyInfoInputs.cache
+D:\DBTour\DBTour\obj\Debug\netcoreapp3.0\DBTour.AssemblyInfo.cs
+D:\DBTour\DBTour\obj\Debug\netcoreapp3.0\DBTour.dll
+D:\DBTour\DBTour\obj\Debug\netcoreapp3.0\DBTour.pdb
+D:\DBTour\DBTour\bin\Debug\netcoreapp3.0\System.Data.SQLite.dll
+D:\DBTour\DBTour\bin\Debug\netcoreapp3.0\runtimes\linux-x64\native\netstandard2.0\SQLite.Interop.dll
+D:\DBTour\DBTour\bin\Debug\netcoreapp3.0\runtimes\osx-x64\native\netstandard2.0\SQLite.Interop.dll
+D:\DBTour\DBTour\bin\Debug\netcoreapp3.0\runtimes\win-x64\native\netstandard2.0\SQLite.Interop.dll
+D:\DBTour\DBTour\bin\Debug\netcoreapp3.0\runtimes\win-x86\native\netstandard2.0\SQLite.Interop.dll
+D:\DBTour\DBTour\obj\Debug\netcoreapp3.0\DBTour.csproj.CopyComplete
