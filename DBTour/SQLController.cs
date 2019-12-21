@@ -25,7 +25,14 @@ namespace DBTour {
         } 
 
         public void executeCommand(string commandString) {
-            this.commandStatus = SQLCommandEvaluator.evaluate(commandString);
+            this.commandStatus = SQLCommandValidator.validate(commandString);
+
+            switch(this.commandStatus) {
+                
+                case CommandCode.CREATE:
+                
+                break;
+            }
         }
 
         private void  validateDB() {
@@ -48,14 +55,21 @@ namespace DBTour {
                 this.isNew = false;
             }
                 string commandString  ="Data Source = {0};Version=3;New={1};Compress=True";
-                connection = new SQLiteConnection(string.Format(commandString,this.dbName,this.isNew.ToString()));
+                this.connection = new SQLiteConnection(string.Format(commandString,this.dbName,this.isNew.ToString()));
                 try{
-                    connection.Open();
+                    this.connection.Open();
                 }
                 catch(Exception e) {
                     Console.WriteLine(e.Message);
                 }
 
+        }
+
+        private void create(string command) {
+            this.command = this.connection.CreateCommand();
+            this.command.CommandText = command;
+            this.command.ExecuteNonQuery();
+            
         }
 
     }
