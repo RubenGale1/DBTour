@@ -13,6 +13,7 @@ namespace DBTour {
         private string dbName;
         private SQLiteConnection connection;
         private SQLiteCommand command;
+        private SQLCommandGeneratorFactory sQLCommandGeneratorFactory;
         private bool isNew;
         public bool isDataBaseValid;
         public CommandCode commandStatus;
@@ -20,7 +21,11 @@ namespace DBTour {
 
         public SQLController(string dbName) { 
             this.dbName = dbName;
+            this.sQLCommandGeneratorFactory = new SQLCommandGeneratorFactory();
             validateDB();
+            if(this.isDataBaseValid){
+            this.command = this.connection.CreateCommand();
+            }
 
         } 
 
@@ -30,12 +35,17 @@ namespace DBTour {
             switch(this.commandStatus) {
                 
                 case CommandCode.CREATE:
-                
+                create();
+                break;
+
+                case CommandCode.TABLES:
+                tables();
                 break;
             }
         }
 
         private void  validateDB() {
+            
             var regex = new Regex(@".*\.db$");
             Match match = regex.Match(this.dbName);
             
@@ -65,12 +75,23 @@ namespace DBTour {
 
         }
 
-        private void create(string command) {
-            this.command = this.connection.CreateCommand();
-            this.command.CommandText = command;
+        private void create() {
+            CreateCommandGenerator  createCommandGenerator = this.sQLCommandGeneratorFactory.newCreateSQLCommandGenerator();
+            this.command.CommandText = createCommandGenerator.generateCommand();
             this.command.ExecuteNonQuery();
+            Console.WriteLine("Finished in correct state");
+
+        }
+
+        private void tables() { 
+            this.command.CommandText = string.Format("SELECT name FROM sqlite_master WHERE type =  'table' ORDER BY 1");
+            var returnObject = this.command.ExecuteScalar();
+            
+            Console.WriteLine(returnObject.ToString());
             
         }
 
     }
+
+
 }
