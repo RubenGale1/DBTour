@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DBTour\\DBtour\\DBTour\\DBTour.csproj": {}
+    "D:\\DBTour\\DBTour\\DBTour.csproj": {}
   },
   "projects": {
-    "D:\\DBTour\\DBtour\\DBTour\\DBTour.csproj": {
+    "D:\\DBTour\\DBTour\\DBTour.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DBTour\\DBtour\\DBTour\\DBTour.csproj",
+        "projectUniqueName": "D:\\DBTour\\DBTour\\DBTour.csproj",
         "projectName": "DBTour",
-        "projectPath": "D:\\DBTour\\DBtour\\DBTour\\DBTour.csproj",
+        "projectPath": "D:\\DBTour\\DBTour\\DBTour.csproj",
         "packagesPath": "C:\\Users\\Ruben.000\\.nuget\\packages\\",
-        "outputPath": "D:\\DBTour\\DBtour\\DBTour\\obj\\",
+        "outputPath": "D:\\DBTour\\DBTour\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Ruben.000\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -35,6 +35,12 @@
       },
       "frameworks": {
         "netcoreapp3.0": {
+          "dependencies": {
+            "System.Data.SQLite.Core": {
+              "target": "Package",
+              "version": "[1.0.112, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
