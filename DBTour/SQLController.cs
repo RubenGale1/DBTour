@@ -1,7 +1,8 @@
 using System;
-using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 using System.Data.SQLite;  
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
@@ -17,6 +18,7 @@ namespace DBTour {
         private bool isNew;
         public bool isDataBaseValid;
         public CommandCode commandStatus;
+        
 
 
         public SQLController(string dbName) { 
@@ -44,6 +46,10 @@ namespace DBTour {
 
                 case CommandCode.INSERT:
                 insert();
+                break;
+
+                case CommandCode.SELECT:
+                select();
                 break;
             }
         }
@@ -89,13 +95,28 @@ namespace DBTour {
 
         private void tables() { 
             this.command.CommandText = string.Format("SELECT name FROM sqlite_master WHERE type =  'table'");
-            var returnObject = this.command.ExecuteScalar();
-            Console.WriteLine(returnObject.ToString());
+            List<string> tables = new List<string>();
+            DataTable dt = this.connection.GetSchema("Tables");
+            foreach(DataRow row in dt.Rows)
+            {
+                string tablename = (string)row[2];
+                Console.WriteLine(tablename);
+                tables.Add(tablename);
+            }
         }
         
         private void insert() {
             InsertCommandGenerator insertCommandGenerator = this.sQLCommandGeneratorFactory.newInsertSQLCommandGenerator();
             this.command.CommandText = insertCommandGenerator.generateCommand();
+            var returnObject = this.command.ExecuteNonQuery();
+            Console.WriteLine(returnObject.ToString());
+        }
+
+        private void select() {
+            SelectCommandGenerator selectCommandGenerator = this.sQLCommandGeneratorFactory.newSelectSQLCommandGenerator();
+            this.command.CommandText = selectCommandGenerator.generateCommand();
+            //TODO
+            //Find out how to handle a select query : System.Data Datatables??? 
         }
 
     }

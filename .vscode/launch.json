@@ -12,7 +12,7 @@
             "program": "${workspaceFolder}/DBTour/bin/Debug/netcoreapp3.0/DBTour.dll",
             "args": [],
             "cwd": "${workspaceFolder}/DBTour",
-            "console": "internalConsole",
+            "console": "externalTerminal",
             "stopAtEntry": false
         },
         {
