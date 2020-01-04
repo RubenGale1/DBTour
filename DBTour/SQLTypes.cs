@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Data.SQLite;
+using System.Collections.Generic;
 
 namespace DBTour {
 
@@ -225,6 +226,7 @@ namespace DBTour {
         internal  SQLCommandGeneratorFactory(SQLiteConnection connection) {
            this.connection = connection;
            getTableMetaData();
+           //----- was up to here, need to use sqliteTable class with getTableMetaData()
        }
 
        private void getTableMetaData() {
@@ -244,8 +246,10 @@ namespace DBTour {
 
 internal class SQLiteTable { 
     public string tableName;
-    public DataTable connectionTable;
-    public 
+    public string[] columnNames;
+    public Dictionary<string,string> columnTypes;
+    
+
 
     
 }
