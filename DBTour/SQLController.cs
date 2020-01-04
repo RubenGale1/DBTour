@@ -23,7 +23,7 @@ namespace DBTour {
 
         public SQLController(string dbName) { 
             this.dbName = dbName;
-            this.sQLCommandGeneratorFactory = new SQLCommandGeneratorFactory();
+            this.sQLCommandGeneratorFactory = new SQLCommandGeneratorFactory(this.connection);
             validateDB();
             if(this.isDataBaseValid){
             this.command = this.connection.CreateCommand();
@@ -49,6 +49,17 @@ namespace DBTour {
                 break;
 
                 case CommandCode.SELECT:
+                DataTable columns = this.connection.GetSchema("Columns");
+                foreach(DataRow row  in columns.Rows) {
+                     string columnName = (string)row["DATA_TYPE"];
+                    //  row consists of 
+                    //     0: sqlite_defalt_schema
+                    //     1: main
+                    //     2: table name
+                    //     3: column_name 
+                    // column names are in order
+                     Console.WriteLine(columnName);
+                }
                 select();
                 break;
             }
@@ -94,7 +105,6 @@ namespace DBTour {
         }
 
         private void tables() { 
-            this.command.CommandText = string.Format("SELECT name FROM sqlite_master WHERE type =  'table'");
             List<string> tables = new List<string>();
             DataTable dt = this.connection.GetSchema("Tables");
             foreach(DataRow row in dt.Rows)
@@ -115,8 +125,11 @@ namespace DBTour {
         private void select() {
             SelectCommandGenerator selectCommandGenerator = this.sQLCommandGeneratorFactory.newSelectSQLCommandGenerator();
             this.command.CommandText = selectCommandGenerator.generateCommand();
-            //TODO
-            //Find out how to handle a select query : System.Data Datatables??? 
+            using SQLiteDataReader rdr = this.command.ExecuteReader();
+
+            while(rdr.Read()) { 
+                Console.WriteLine($"{rdr.GetInt32(0)},{rdr.GetString(1)},{rdr.GetString(2)}");
+            }
         }
 
     }

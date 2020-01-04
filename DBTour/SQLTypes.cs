@@ -1,15 +1,13 @@
 using System;
+using System.Data;
+using System.Data.SQLite;
 
 namespace DBTour {
 
-    internal class SQLCommandGenerator {
+    internal abstract class SQLCommandGenerator {
         private CommandCode commandCode;
-        internal SQLCommandGenerator(CommandCode commandCode) {
-            this.commandCode = commandCode;
-            Console.WriteLine("Sucess in Other Generator");
-        }
-        internal SQLCommandGenerator() {}
-
+        internal abstract string generateCommand();
+       
     }
 
     internal class CreateCommandGenerator : SQLCommandGenerator {
@@ -51,7 +49,7 @@ namespace DBTour {
 
         }
 
-        internal string generateCommand() {
+        internal override string generateCommand() {
             var stringBuilder = new System.Text.StringBuilder();
             stringBuilder.Append(string.Format("CREATE TABLE IF NOT EXISTS {0}(",this.tableName));
             for(int i =0; i< this.colNumber ; i++) {
@@ -120,7 +118,7 @@ namespace DBTour {
                }
            }
         }
-        internal string generateCommand() {
+        internal override string generateCommand() {
             var stringBuilder = new System.Text.StringBuilder();
             stringBuilder.Append(string.Format("INSERT INTO {0} (",this.tableName));
             for(int i = 0; i < this.colNumber; i++) {
@@ -151,12 +149,11 @@ namespace DBTour {
         private int colNumber;
         private string[] colNames;
         
-        internal SelectCommandGenerator(CommandCode commandCode) {
+        internal SelectCommandGenerator(CommandCode commandCode, SQLiteConnection connection) {
             this.commandCode = commandCode;
             var sB = new System.Text.StringBuilder();
             Console.WriteLine("Enter Table Name");
             this.tableName = Console.ReadLine();
-            
             Console.WriteLine("Select from specific columns? [y/n]");
             this.isSelectAll = Console.ReadLine().ToUpper() == "Y" ? false : true;
 
@@ -195,17 +192,25 @@ namespace DBTour {
 
         }
 
-        internal string generateCommand() {
+        internal override string generateCommand() {
             var sB = new System.Text.StringBuilder();
-            sB.Append("SELECT (");
 
-            for(int i =0; i < colNumber ; i++) { 
-                sB.Append(string.Format("{0},",this.colNames[i]));
-            }
-            sB.Remove(sB.Length-1,1);
-            sB.Append(string.Format(") FROM {0}",this.tableName));
-            if(this.isConditional) {
-                sB.Append(string.Format("WHERE {0}",this.conditional));
+            switch (this.isSelectAll) {
+                case true: 
+                    sB.Append($"SELECT * FROM {this.tableName}");
+                    break;
+                    
+                case false:
+                    sB.Append("SELECT (");
+                    for(int i =0; i < colNumber ; i++) { 
+                        sB.Append(string.Format("{0},",this.colNames[i]));
+                    }
+                    sB.Remove(sB.Length-1,1);
+                    sB.Append(string.Format(") FROM {0}",this.tableName));
+                    if(this.isConditional) {
+                        sB.Append(string.Format("WHERE {0}",this.conditional));
+                    }
+                    break;
             }
             Console.WriteLine(sB.ToString());
             return sB.ToString();
@@ -215,9 +220,15 @@ namespace DBTour {
     }
     
  
-    internal class SQLCommandGeneratorFactory {
+    internal sealed class SQLCommandGeneratorFactory {
+        private SQLiteConnection connection;
+        internal  SQLCommandGeneratorFactory(SQLiteConnection connection) {
+           this.connection = connection;
+           getTableMetaData();
+       }
 
-       internal SQLCommandGeneratorFactory() {
+       private void getTableMetaData() {
+
        }
        internal InsertCommandGenerator newInsertSQLCommandGenerator() {
                return new InsertCommandGenerator(CommandCode.INSERT);
@@ -229,4 +240,12 @@ namespace DBTour {
             return new SelectCommandGenerator(CommandCode.SELECT);
            }
        }
+}
+
+internal class SQLiteTable { 
+    public string tableName;
+    public DataTable connectionTable;
+    public 
+
+    
 }
