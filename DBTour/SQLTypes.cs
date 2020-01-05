@@ -222,10 +222,9 @@ namespace DBTour {
     
  
     internal sealed class SQLCommandGeneratorFactory {
-        private SQLiteConnection connection;
-        internal  SQLCommandGeneratorFactory(SQLiteConnection connection) {
-           this.connection = connection;
-           getTableMetaData();
+        public SQLiteTableMetaData metaData;
+        internal  SQLCommandGeneratorFactory(SQLiteTableMetaData tableMetaData) {
+
            //----- was up to here, need to use sqliteTable class with getTableMetaData()
        }
 
@@ -244,12 +243,73 @@ namespace DBTour {
        }
 }
 
-internal class SQLiteTable { 
+internal class SQLiteTableMetaData { 
     public string tableName;
-    public string[] columnNames;
-    public Dictionary<string,string> columnTypes;
-    
+    private string[][] columnInfo;
+    // [0] = column name
+    // [1] = column type
 
+    // will need to extend this class as I go
+    public SQLiteTableMetaData(string tableName, string[][] columnInfo) {
+        this.tableName = tableName;
+        this.columnInfo = columnInfo;
+    }
 
+    public string[] getColumnNames() { 
+        string[] returnArray = new string[columnInfo.Length];
+        for(int column =0; column < this.columnInfo.Length; column ++) { 
+            returnArray[column] = this.columnInfo[0][column];
+        }
+        return returnArray;
+    }
+     public string[] getColumnTypes() { 
+        string[] returnArray = new string[columnInfo.Length];
+        for(int column =0; column < this.columnInfo.Length; column ++) { 
+            returnArray[column] = this.columnInfo[0][column];
+        }
+        return returnArray;
+    }
+
+    public string[][] getColumnInfo() {
+        return this.columnInfo;
+    }
     
 }
+
+internal class SQLiteMetaData {
+    Dictionary<string,SQLiteTableMetaData> tablesMetaData;
+    //key is table name
+
+    public SQLiteMetaData(SQLiteConnection connection) { 
+        
+        this.tablesMetaData = new Dictionary<string, SQLiteTableMetaData>();
+        List<string[]> columnInfo = new List<string[]>();
+        DataTable table = connection.GetSchema("Columns");
+        string currentTableName, previousTableName = "";
+
+        
+        foreach(DataRow row in table.Rows) {
+           
+           currentTableName = (string)row["TABLE_NAME"];
+           
+           if(string.IsNullOrEmpty(previousTableName)) { 
+               previousTableName = currentTableName;
+           }
+
+            if(currentTableName == previousTableName) { 
+                
+                columnInfo.Add(new string[] { row["COLUMN_NAME"].ToString(),row["DATA_TYPE"].ToString()});
+            }
+            else { 
+
+                this.tablesMetaData.Add(currentTableName,
+                new SQLiteTableMetaData(currentTableName,columnInfo.ToArray()));
+                columnInfo.Clear();
+            }
+            previousTableName = currentTableName;
+        }
+        
+    }
+    // add get methods next 
+
+} 
